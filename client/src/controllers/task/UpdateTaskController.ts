@@ -4,7 +4,8 @@ import { Task } from "../../db/models/Task";
 
 class UpdateTaskController {
     async handle(req: Request, res: Response) {
-        const { id, title, description, finished }: Task = req.body;
+        const id = Number.parseInt(req.query.id as string);
+        const { title, description, finished }: Task = req.body;
 
         const service = new UpdateTaskService();
 

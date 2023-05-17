@@ -12,12 +12,10 @@ class UpdateTaskService {
 
         const index = tasks.findIndex(item => item.id === task.id);
         
-        if (index != -1) { // -1 if task was not found
-            tasks[index] = task;
-            return task;
-        }
-        
-        return index;
+        if (index === -1) return index; // -1 if task was not found
+
+        tasks[index] = task;
+        return task;
     }
 }
 

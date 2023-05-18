@@ -6,7 +6,7 @@ import "./index.css";
 function Content() {
     const [tasks, setTasks] = useState<ItemProps[]>([]);
     const [loading, setLoading] = useState(true);
-    const [deleted, setDeleted] = useState(false);
+    const [edited, setEdited] = useState(false);
 
     async function loadTasks() {
         await api.get("/tasks")
@@ -25,18 +25,18 @@ function Content() {
     }, []);
 
     useEffect(() => {
-        if (deleted) {
+        if (edited) {
             loadTasks();
-            setDeleted(false);
+            setEdited(false);
         }
-    }, [deleted]);
+    }, [edited]);
 
     return (
         <div className="container">
             {loading ? (
                 <h4>Loading...</h4>
             ) : (
-                tasks.map((item, index) => <Item key={index} id={item.id} title={item.title} description={item.description} finished={item.finished} setDeleted={setDeleted} />)
+                tasks.map((item, index) => <Item key={index} id={item.id} title={item.title} description={item.description} finished={item.finished} setEdited={setEdited} />)
             )}
         </div>
     );

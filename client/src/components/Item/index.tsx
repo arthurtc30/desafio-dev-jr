@@ -7,14 +7,25 @@ export interface ItemProps {
     title: string;
     description?: string;
     finished: boolean;
-    setDeleted: Function;
+    setEdited: Function;
 }
 
 function Item(props: ItemProps) {
+    async function toggleTask() {
+        await api.put(`/tasks?id=${props.id}`)
+        .then((p) => {
+            props.setEdited(true);
+            console.log(`${props.finished ? "Opened" : "Finished"} task ${props.title}`);
+        })
+        .catch((err: Error) => {
+            console.log(err.message);
+        });
+    }
+
     async function deleteTask() {
         await api.delete(`/tasks?id=${props.id}`)
         .then((p) => {
-            props.setDeleted(true);
+            props.setEdited(true);
             console.log(`Deleted task ${props.title}`);
         })
         .catch((err: Error) => {
@@ -31,7 +42,7 @@ function Item(props: ItemProps) {
             </div>
             <div className="item-buttons">
                 <Button>Edit task</Button>
-                <Button>Finish/Open task</Button>
+                <Button onClick={toggleTask}>{props.finished ? "Open" : "Finish"} task</Button>
                 <Button onClick={deleteTask}>Delete task</Button>
             </div>
         </div>

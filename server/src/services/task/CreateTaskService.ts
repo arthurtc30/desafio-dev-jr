@@ -10,7 +10,7 @@ interface TaskRequest {
 class CreateTaskService {
     async execute({ title, description, finished }: TaskRequest) {
         const task: Task = {
-            id: tasks[tasks.length - 1].id + 1,
+            id: tasks.length ? tasks[tasks.length - 1].id + 1 : 1,
             title,
             description,
             finished,

@@ -8,6 +8,9 @@
 	border-radius: 10px;
 	margin-top: 2%;
 	box-shadow: #02020963 0.2em 0.2em 0.9em;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 
 .expanded {
@@ -17,25 +20,48 @@
 
 .item-text {
 	display: flex;
-	justify-content: center;
+	justify-content: space-around;
 	align-items: center;
 	flex-direction: column;
 	width: 100%;
 	height: 70%;
 }
 
+.item-text-title {
+	margin-top: 1%;
+}
+
 .item-buttons {
 	display: flex;
-	height: 30%;
+	height: 15%;
 	justify-content: space-evenly;
 }
 
 .textbox {
+	border: 0;
 	border-radius: 5px;
+	padding: 1%;
 	margin-top: 1%;
 	color: #000;
 	resize: none;
 	width: 60%;
 	height: 60%;
 	transition: 1s ease-in-out;
+}
+
+.item-save-button {
+	margin-top: 0.2%;
+	background-color: #5dc248;
+	border: 0;
+	border-radius: 5px;
+	width: 62%;
+	cursor: pointer;
+	transition: 1s ease-in-out;
+}
+
+.item-text-title-input {
+	height: 12%;
+	color: #000;
+	font-size: large;
+	transition: 0.2s ease-in-out;
 }

@@ -2,23 +2,47 @@ import { useState } from "react";
 import api from "../../services/api";
 import Button from "./Button";
 import "./index.css";
+import { AxiosResponse } from "axios";
+import { FaCheck, FaTimes } from "react-icons/fa"
 
-export interface ItemProps {
+export interface ItemData {
     id: number;
     title: string;
-    description?: string;
+    description: string;
     finished: boolean;
+}
+
+interface ItemProps extends ItemData {
     setEdited: Function;
+}
+
+interface ResponseData {
+    message: string;
+    task: ItemData;
 }
 
 function Item(props: ItemProps) {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
+    const [newTitle, setNewTitle] = useState<string>(props.title);
+    const [newDescription, setNewDescription] = useState<string>(props.description);
+    const [isEditing, setIsEditing] = useState<boolean>(false);
 
     const expandedTextAreaStyle = {
         height: "60%",
     };
-
+    
     const hiddenTextAreaStyle = {
+        height: "0%",
+        opacity: "0%",
+        pointerEvents: "none"
+    }
+    
+    const expandedSaveButtonStyle = {
+        height: "15%",
+        opacity: `${isEditing ? "100" : "85"}%`
+    }
+    
+    const hiddenSaveButtonStyle = {
         height: "0%",
         opacity: "0%",
         pointerEvents: "none"
@@ -26,7 +50,7 @@ function Item(props: ItemProps) {
 
     async function toggleTask() {
         await api.put(`/tasks?id=${props.id}`)
-        .then((p) => {
+        .then(() => {
             props.setEdited(true);
             console.log(`${props.finished ? "Opened" : "Finished"} task ${props.title}`);
         })
@@ -37,7 +61,7 @@ function Item(props: ItemProps) {
 
     async function deleteTask() {
         await api.delete(`/tasks?id=${props.id}`)
-        .then((p) => {
+        .then(() => {
             props.setEdited(true);
             console.log(`Deleted task ${props.title}`);
         })
@@ -46,18 +70,72 @@ function Item(props: ItemProps) {
         });
     }
 
+    async function updateTask() {
+        if (!newTitle) return;
+
+        await api.patch(`/tasks?id=${props.id}`, {
+            title: newTitle,
+            description: newDescription,
+            finished: props.finished
+        })
+        .then((p: AxiosResponse<ResponseData>) => {
+            setNewTitle(p.data.task.title);
+            setNewDescription(p.data.task.description);
+            expand();
+            props.setEdited(true);
+        })
+        .catch((err: Error) => {
+            console.log(err.message);
+        });
+    }
+
     function expand() {
+        if (isExpanded) {
+            setNewDescription(props.description);
+        }
+
         setIsExpanded(!isExpanded);
     }
 
     return (
         <div className={isExpanded ? "item expanded" : "item"}>
             <div className="item-text">
-                <h4>
-                    {props.title}
-                </h4>
+                {props.finished ? <FaCheck fill="#00FF00" /> : <FaTimes fill="#FF0000"/>}
 
-                <textarea placeholder="Description..." className="textbox" style={isExpanded ? expandedTextAreaStyle : hiddenTextAreaStyle}>{props.description}</textarea>
+                {isExpanded ? (
+                    <input
+                        className="item-text-title-input"
+                        type="text"
+                        value={newTitle}
+                        onChange={(e) => {
+                            setIsEditing(true);
+                            setNewTitle(e.target.value);
+                        }}
+                    />
+                ) : (
+                    <h4 className="item-text-title">
+                        {newTitle}
+                    </h4>
+                )}
+
+                <textarea 
+                    placeholder="Description..."
+                    className="textbox"
+                    style={isExpanded ? expandedTextAreaStyle : hiddenTextAreaStyle}
+                    maxLength={300}
+                    value={newDescription}
+                    onChange={(e) => {
+                        setIsEditing(true);
+                        setNewDescription(e.target.value);
+                    }}
+                />
+                <button
+                    style={isExpanded ? expandedSaveButtonStyle : hiddenSaveButtonStyle}
+                    className="item-save-button"
+                    onClick={updateTask}
+                >
+                    Save
+                </button>
             </div>
 
             <div className="item-buttons">

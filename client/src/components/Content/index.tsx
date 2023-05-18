@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import api from "../../services/api";
-import Item, { ItemProps } from "../Item";
+import Item, { ItemData } from "../Item";
 import "./index.css";
 
 function Content() {
-    const [tasks, setTasks] = useState<ItemProps[]>([]);
+    const [tasks, setTasks] = useState<ItemData[]>([]);
     const [loading, setLoading] = useState(true);
     const [edited, setEdited] = useState(false);
 

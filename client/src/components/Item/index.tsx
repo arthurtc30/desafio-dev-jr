@@ -1,3 +1,4 @@
+import { useState } from "react";
 import api from "../../services/api";
 import Button from "./Button";
 import "./index.css";
@@ -11,6 +12,18 @@ export interface ItemProps {
 }
 
 function Item(props: ItemProps) {
+    const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
+    const expandedTextAreaStyle = {
+        height: "60%",
+    };
+
+    const hiddenTextAreaStyle = {
+        height: "0%",
+        opacity: "0%",
+        pointerEvents: "none"
+    }
+
     async function toggleTask() {
         await api.put(`/tasks?id=${props.id}`)
         .then((p) => {
@@ -33,15 +46,22 @@ function Item(props: ItemProps) {
         });
     }
 
+    function expand() {
+        setIsExpanded(!isExpanded);
+    }
+
     return (
-        <div className="item">
+        <div className={isExpanded ? "item expanded" : "item"}>
             <div className="item-text">
                 <h4>
                     {props.title}
                 </h4>
+
+                <textarea placeholder="Description..." className="textbox" style={isExpanded ? expandedTextAreaStyle : hiddenTextAreaStyle}>{props.description}</textarea>
             </div>
+
             <div className="item-buttons">
-                <Button>Edit task</Button>
+                <Button onClick={expand}>{isExpanded ? "Hide" : "Show"} details...</Button>
                 <Button onClick={toggleTask}>{props.finished ? "Open" : "Finish"} task</Button>
                 <Button onClick={deleteTask}>Delete task</Button>
             </div>

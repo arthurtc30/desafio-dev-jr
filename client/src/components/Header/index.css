@@ -1,0 +1,8 @@
+.header-content {
+	width: 90%;
+	height: 15%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 32px;
+}

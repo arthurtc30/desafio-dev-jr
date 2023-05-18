@@ -1,0 +1,14 @@
+.item {
+	border: 1px solid blue;
+	width: 100%;
+	height: 20%;
+	padding: 1%;
+}
+
+.item-text {
+	height: 70%;
+}
+
+.item-buttons {
+	height: 30%;
+}

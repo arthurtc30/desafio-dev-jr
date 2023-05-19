@@ -4,6 +4,7 @@ import Button from "./Button";
 import "./index.css";
 import { AxiosResponse } from "axios";
 import { FaCheck, FaTimes } from "react-icons/fa"
+import { toast } from 'react-toastify';
 
 export interface ItemData {
     id: number;
@@ -52,9 +53,10 @@ function Item(props: ItemProps) {
         await api.put(`/tasks?id=${props.id}`)
         .then(() => {
             props.setEdited(true);
-            console.log(`${props.finished ? "Opened" : "Finished"} task ${props.title}`);
+            toast.success(`Successfully ${props.finished ? "opened" : "finished"} task`);
         })
         .catch((err: Error) => {
+            toast.error(`Could not ${props.finished ? "open" : "finish"} task`);
             console.log(err.message);
         });
     }
@@ -63,9 +65,10 @@ function Item(props: ItemProps) {
         await api.delete(`/tasks?id=${props.id}`)
         .then(() => {
             props.setEdited(true);
-            console.log(`Deleted task ${props.title}`);
+            toast.success("Deleted task");
         })
         .catch((err: Error) => {
+            toast.error("Could not delete task");
             console.log(err.message);
         });
     }
@@ -81,10 +84,12 @@ function Item(props: ItemProps) {
         .then((p: AxiosResponse<ResponseData>) => {
             setNewTitle(p.data.task.title);
             setNewDescription(p.data.task.description);
+            toast.success("Successfully updated task");
             expand();
             props.setEdited(true);
         })
         .catch((err: Error) => {
+            toast.error("Could not update task");
             console.log(err.message);
         });
     }

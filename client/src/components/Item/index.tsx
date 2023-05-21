@@ -26,7 +26,7 @@ function Item(props: ItemProps) {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [newTitle, setNewTitle] = useState<string>(props.title);
     const [newDescription, setNewDescription] = useState<string>(props.description);
-    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [shouldReset, setShouldReset] = useState<boolean>(true);
 
     const expandedTextAreaStyle = {
         height: "60%",
@@ -40,7 +40,6 @@ function Item(props: ItemProps) {
     
     const expandedSaveButtonStyle = {
         height: "15%",
-        opacity: `${isEditing ? "100" : "85"}%`
     }
     
     const hiddenSaveButtonStyle = {
@@ -75,6 +74,7 @@ function Item(props: ItemProps) {
 
     async function updateTask() {
         if (!newTitle) return;
+        setShouldReset(false);
 
         await api.patch(`/tasks?id=${props.id}`, {
             title: newTitle,
@@ -85,37 +85,37 @@ function Item(props: ItemProps) {
             setNewTitle(p.data.task.title);
             setNewDescription(p.data.task.description);
             toast.success("Successfully updated task");
-            expand();
             props.setEdited(true);
+            expand();
         })
         .catch((err: Error) => {
             toast.error("Could not update task");
             console.log(err.message);
+            setShouldReset(true);
         });
+
     }
 
     function expand() {
-        if (isExpanded) {
-            setNewDescription(props.description);
-        }
-
         setIsExpanded(!isExpanded);
+    }
+
+    function resetFields() {
+        setNewTitle(props.title);
+        setNewDescription(props.description);
     }
 
     return (
         <div className={isExpanded ? "item expanded" : "item"}>
             <div className="item-text">
-                {props.finished ? <FaCheck fill="#00FF00" /> : <FaTimes fill="#FF0000"/>}
+                {props.finished ? <FaCheck /> : <FaTimes />}
 
                 {isExpanded ? (
                     <input
                         className="item-text-title-input"
                         type="text"
                         value={newTitle}
-                        onChange={(e) => {
-                            setIsEditing(true);
-                            setNewTitle(e.target.value);
-                        }}
+                        onChange={(e) => setNewTitle(e.target.value)}
                     />
                 ) : (
                     <h4 className="item-text-title">
@@ -129,10 +129,7 @@ function Item(props: ItemProps) {
                     style={isExpanded ? expandedTextAreaStyle : hiddenTextAreaStyle}
                     maxLength={300}
                     value={newDescription}
-                    onChange={(e) => {
-                        setIsEditing(true);
-                        setNewDescription(e.target.value);
-                    }}
+                    onChange={(e) => setNewDescription(e.target.value)}
                 />
                 <button
                     style={isExpanded ? expandedSaveButtonStyle : hiddenSaveButtonStyle}
@@ -144,7 +141,13 @@ function Item(props: ItemProps) {
             </div>
 
             <div className="item-buttons">
-                <Button onClick={expand}>{isExpanded ? "Hide" : "Show"} details...</Button>
+                <Button onClick={() => {
+                    if (shouldReset) resetFields();
+
+                    expand();
+                }}>
+                    {isExpanded ? "Hide" : "Show"} details...
+                </Button>
                 <Button onClick={toggleTask}>{props.finished ? "Open" : "Finish"} task</Button>
                 <Button onClick={deleteTask}>Delete task</Button>
             </div>

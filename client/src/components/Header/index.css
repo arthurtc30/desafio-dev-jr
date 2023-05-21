@@ -4,6 +4,12 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	font-size: 32px;
+	font-size: 42px;
 	font-style: italic;
+	pointer-events: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	text-decoration: underline wavy;
+	color: #287e1c;
 }

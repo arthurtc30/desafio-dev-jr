@@ -4,7 +4,7 @@
 	transition: 1s ease-in-out;
 	padding: 1%;
 	border-radius: 12px;
-	background-color: #04011bce;
+	background-color: #287e1c;
 	border-radius: 10px;
 	margin-top: 2%;
 	box-shadow: #02020963 0.2em 0.2em 0.9em;
@@ -51,7 +51,7 @@
 
 .item-save-button {
 	margin-top: 0.2%;
-	background-color: #5dc248;
+	background-color: #78be67;
 	border: 0;
 	border-radius: 5px;
 	width: 62%;

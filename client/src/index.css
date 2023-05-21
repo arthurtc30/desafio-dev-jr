@@ -8,7 +8,7 @@
 }
 
 body {
-	background-color: #04011bda;
+	background-color: #c9ffb1;
 }
 
 html,
@@ -21,3 +21,11 @@ body,
 	height: 100%;
 	width: 100%;
 }
+
+/*
+.color1 { #287e1c };
+.color2 { #509e42 };
+.color3 { #78be67 };
+.color4 { #a1df8c };
+.color5 { #c9ffb1 };
+*/

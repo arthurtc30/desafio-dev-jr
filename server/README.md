@@ -18,6 +18,8 @@ To run the project, you can use Yarn or NPM, as follows:
     npm run dev
     yarn dev
 
+The backend runs on port 3333 by default.
+
 ### Routes
 
  - /tasks - GET - lists all tasks
